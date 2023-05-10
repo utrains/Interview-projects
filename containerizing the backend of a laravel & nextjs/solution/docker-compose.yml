@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfilefrontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.example
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./
+      dockerfile: DockerfileBackend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.example
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: myrootpassword
+      # MYSQL_PASSWORD: mypassword
+      # MYSQL_ROOT_PASSWORD: myrootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
